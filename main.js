@@ -1,6 +1,9 @@
 'use strict';
 // shows more errors in the console
+let cart = [];
+// cart array to store products
 const cartDom = document.querySelector('.cart');
+// selects cart class
 const addToCartButtonsDOM = document.querySelectorAll('[data-action="ADD_TO_CART"]');
 // selects all the add to cart buttons
 
@@ -26,5 +29,10 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     // beforeend adds to the top of the cart
     // backticks create a template string
     // adds products to cart HTML
+    cart.push(product);
+    // pushes products to cart array
+    addToCartButtonDOM.innerText = 'In Cart';
+    // changes add to cart text to in cart
+    console.log(cart);
   });
 });
