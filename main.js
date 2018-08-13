@@ -20,19 +20,26 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     }
     // creates product object
     // console.table(product);
-    cartDom.insertAdjacentHTML('beforeend', `
-    <div class="cart__item">
-      <h3 class="class__item__name">${product.name}</h3>
-      <h3 class="class__item__price"${product.price}</h3>
-      </div>
-    `);
-    // beforeend adds to the top of the cart
-    // backticks create a template string
-    // adds products to cart HTML
-    cart.push(product);
-    // pushes products to cart array
-    addToCartButtonDOM.innerText = 'In Cart';
-    // changes add to cart text to in cart
-    console.log(cart);
+
+    const isInCart = (cart.filter(cartItem => (cartItem.name === product.name)).length > 0);
+      // filter creates array of products already in cart
+      // if (isInCart === false) {
+      if (!isInCart) {
+        // only adds products that are not in the cart
+        cartDom.insertAdjacentHTML('beforeend', `
+        <div class="cart__item">
+          <h3 class="class__item__name">${product.name}</h3>
+          <h3 class="class__item__price">${product.price}</h3>
+          </div>
+        `);
+        // beforeend adds to the top of the cart
+        // backticks create a template string
+        // adds products to cart HTML
+        cart.push(product);
+        // pushes products to cart array
+        addToCartButtonDOM.innerText = 'In Cart';
+        // changes add to cart text to in cart
+        // console.log(cart);
+      }
   });
 });
