@@ -1,0 +1,26 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-container {
+  display: flex;
+}
+
+.products {
+  display: flex;
+  padding-top: 20px;
+}
+
+.product {
+  margin-right: 50px;
+}
+
+.section {
+  margin-left: 50px;
+}
+
+.cart__item {
+  padding-top: 20px;
+}
