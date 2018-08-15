@@ -59,6 +59,16 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
               }
             });
           });
+
+          cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
+            cart.forEach(cartItem => {
+              if (cartItem.name === product.name) {
+                // cartItem.quantity++;
+                  cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
+                  // ++ added to beginning otherwise the value displays first
+              }
+            });
+          });
         }
       });
     }
