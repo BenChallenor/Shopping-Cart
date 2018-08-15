@@ -24,11 +24,11 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     // console.table(product);
 
     const isInCart = (cart.filter(cartItem => (cartItem.name === product.name)).length > 0);
-      // filter creates array of products already in cart
-      // if (isInCart === false) {
-      if (!isInCart) {
-        // only adds products that are not in the cart
-        cartDom.insertAdjacentHTML('beforeend', `
+    // filter creates array of products already in cart
+    // if (isInCart === false) {
+    if (!isInCart) {
+      // only adds products that are not in the cart
+      cartDom.insertAdjacentHTML('beforeend', `
         <div class="cart__item">
           <h3 class="cart__item__name">${product.name}</h3>
           <h3 class="cart__item__price">${product.price}</h3>
@@ -38,14 +38,29 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
           <button class="btn btn--primary bt--small" data-action="DELETE_ITEM">&times;</button>
           </div>
         `);
-        // beforeend adds to the top of the cart
-        // backticks create a template string
-        // adds products to cart HTML
-        cart.push(product);
-        // pushes products to cart array
-        addToCartButtonDOM.innerText = 'In Cart';
-        // changes add to cart text to in cart
-        // console.log(cart);
-      }
+      // beforeend adds to the top of the cart
+      // backticks create a template string
+      // adds products to cart HTML
+      cart.push(product);
+      // pushes products to cart array
+      addToCartButtonDOM.innerText = 'In Cart';
+      // changes add to cart text to in cart
+      // console.log(cart);
+
+      const cartItemsDom = cartDom.querySelectorAll(".cart__item");
+      cartItemsDom.forEach(cartItemDom => {
+        if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
+          cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
+            cart.forEach(cartItem => {
+              if (cartItem.name === product.name) {
+                // cartItem.quantity++;
+                  cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
+                  // ++ added to beginning otherwise the value displays first
+              }
+            });
+          });
+        }
+      });
+    }
   });
 });
