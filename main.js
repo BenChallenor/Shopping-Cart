@@ -16,7 +16,9 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     const product = {
       name: productDOM.querySelector('.product__name').innerText,
       // innerText gets name from HTML
-      price: productDOM.querySelector('.product__price').innerText
+      price: productDOM.querySelector('.product__price').innerText,
+      quantity: 1
+      // default quantity
     }
     // creates product object
     // console.table(product);
@@ -28,8 +30,12 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
         // only adds products that are not in the cart
         cartDom.insertAdjacentHTML('beforeend', `
         <div class="cart__item">
-          <h3 class="class__item__name">${product.name}</h3>
-          <h3 class="class__item__price">${product.price}</h3>
+          <h3 class="cart__item__name">${product.name}</h3>
+          <h3 class="cart__item__price">${product.price}</h3>
+          <button class="btn btn--primary bt--small" data-action="DECREASE_ITEM">&minus;</button>
+          <h3 class="cart__item__quantity">${product.quantity}</h3>
+          <button class="btn btn--primary bt--small" data-action="INCREASE_ITEM">&plus;</button>
+          <button class="btn btn--primary bt--small" data-action="DELETE_ITEM">&times;</button>
           </div>
         `);
         // beforeend adds to the top of the cart
