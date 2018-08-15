@@ -47,10 +47,10 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
       // changes add to cart text to in cart
       // console.log(cart);
 
+      // increasing item quantity
       const cartItemsDom = cartDom.querySelectorAll(".cart__item");
       cartItemsDom.forEach(cartItemDom => {
         if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
-          // increasing item quantity
           cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
             cart.forEach(cartItem => {
               if (cartItem.name === product.name) {
@@ -60,7 +60,8 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
               }
             });
           });
-          // creasing item quantity
+
+          // decreasing item quantity
           cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
             cart.forEach(cartItem => {
               if (cartItem.name === product.name) {
@@ -71,13 +72,27 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
                 } else {
                   cartItemDom.remove();
                   cart = cart.filter(cartItem => cartItem.name !== product.name);
-                // removes item form the cart. Creates new array
-                addToCartButtonDOM.innerText = 'Add To Cart';
-                // changes button back to add to cart
+                  // removes item form the cart. Creates new array
+                  addToCartButtonDOM.innerText = 'Add To Cart';
+                  // changes button back to add to cart
                 }
               }
             });
           });
+
+          // delete item from cart
+          cartItemDom.querySelector('[data-action="DELETE_ITEM"]').addEventListener('click', () => {
+            cart.forEach(cartItem => {
+              if (cartItem.name === product.name) {
+                cartItemDom.remove();
+                cart = cart.filter(cartItem => cartItem.name !== product.name);
+                // removes item form the cart. Creates new array
+                addToCartButtonDOM.innerText = 'Add To Cart';
+                // changes button back to add to cart
+              }
+            });
+          });
+
         }
       });
     }
