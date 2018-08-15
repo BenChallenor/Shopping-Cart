@@ -50,22 +50,31 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
       const cartItemsDom = cartDom.querySelectorAll(".cart__item");
       cartItemsDom.forEach(cartItemDom => {
         if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
+          // increasing item quantity
           cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
             cart.forEach(cartItem => {
               if (cartItem.name === product.name) {
                 // cartItem.quantity++;
-                  cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
-                  // ++ added to beginning otherwise the value displays first
+                cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
+                // ++ added to beginning otherwise the value displays first
               }
             });
           });
-
+          // creasing item quantity
           cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
             cart.forEach(cartItem => {
               if (cartItem.name === product.name) {
-                // cartItem.quantity++;
+                if (cartItem.quantity > 1) {
+                  // cartItem.quantity++;
                   cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
                   // ++ added to beginning otherwise the value displays first
+                } else {
+                  cartItemDom.remove();
+                  cart = cart.filter(cartItem => cartItem.name !== product.name);
+                // removes item form the cart. Creates new array
+                addToCartButtonDOM.innerText = 'Add To Cart';
+                // changes button back to add to cart
+                }
               }
             });
           });
