@@ -1,5 +1,6 @@
 'use strict';
 // shows more errors in the console
+
 let cart = [];
 // cart array to store products
 const cartDom = document.querySelector('.cart');
@@ -43,6 +44,9 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
       // adds products to cart HTML
       cart.push(product);
       // pushes products to cart array
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // stores to local storage. Takes two arguments. cart = key to access the data, saves value JS object as a string -> JSON
+      // can be seen in the console -> Application/Local storage
       addToCartButtonDOM.innerText = 'In Cart';
       // changes add to cart text to in cart
       // console.log(cart);
@@ -69,10 +73,14 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
                   // cartItem.quantity++;
                   cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
                   // ++ added to beginning otherwise the value displays first
+                  localStorage.setItem('cart', JSON.stringify(cart));
+                  // needs to be added whenever the state of the cart is changed
                 } else {
                   cartItemDom.remove();
                   cart = cart.filter(cartItem => cartItem.name !== product.name);
                   // removes item form the cart. Creates new array
+                  localStorage.setItem('cart', JSON.stringify(cart));
+                  // needs to be added whenever the state of the cart is changed
                   addToCartButtonDOM.innerText = 'Add To Cart';
                   // changes button back to add to cart
                 }
@@ -87,6 +95,8 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
                 cartItemDom.remove();
                 cart = cart.filter(cartItem => cartItem.name !== product.name);
                 // removes item form the cart. Creates new array
+                localStorage.setItem('cart', JSON.stringify(cart));
+                // needs to be added whenever the state of the cart is changed
                 addToCartButtonDOM.innerText = 'Add To Cart';
                 // changes button back to add to cart
               }
