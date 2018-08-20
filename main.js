@@ -1,13 +1,39 @@
 'use strict';
 // shows more errors in the console
 
-let cart = [];
-// cart array to store products
+let cart = (JSON.parse(localStorage.getItem('cart')) || []);
+// if theres an item in the local storage called 'cart' its value is assigned to a cart variable if not an empty array is assigned
 const cartDom = document.querySelector('.cart');
 // selects cart class
 const addToCartButtonsDOM = document.querySelectorAll('[data-action="ADD_TO_CART"]');
 // selects all the add to cart buttons
 
+
+console.log(JSON.parse(localStorage.getItem('cart')));
+// JSON.parse turns JSON object in to an array
+if (cart.length > 0) {
+  cart.forEach(cartItem => {
+    const product = cartItem;
+    cartDom.insertAdjacentHTML('beforeend', `
+      <div class="cart__item">
+        <h3 class="cart__item__name">${product.name}</h3>
+        <h3 class="cart__item__price">${product.price}</h3>
+        <button class="btn btn--primary bt--small" data-action="DECREASE_ITEM">&minus;</button>
+        <h3 class="cart__item__quantity">${product.quantity}</h3>
+        <button class="btn btn--primary bt--small" data-action="INCREASE_ITEM">&plus;</button>
+        <button class="btn btn--primary bt--small" data-action="DELETE_ITEM">&times;</button>
+        </div>
+      `);
+
+      addToCartButtonsDOM.forEach(addToCartButtonDOM => {
+        const productDOM = addToCartButtonDOM.parentNode;
+
+        if (productDOM.querySelector('.product__name').innerText === product.name) {
+          addToCartButtonDOM.innerText = 'In Cart';
+        }
+      });
+  });
+}
 // addToCartButtonsDOM.forEach(function (addToCartButtonDOM) {
 addToCartButtonsDOM.forEach(addToCartButtonDOM => {
   addToCartButtonDOM.addEventListener('click', () => {
