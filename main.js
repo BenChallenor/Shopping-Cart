@@ -14,71 +14,18 @@ console.log(JSON.parse(localStorage.getItem('cart')));
 if (cart.length > 0) {
   cart.forEach(cartItem => {
     const product = cartItem;
-    insertItremToDOM(product)
+    insertItemToDOM(product)
     // need to pass in product object
     addToCartButtonsDOM.forEach(addToCartButtonDOM => {
       const productDOM = addToCartButtonDOM.parentNode;
 
       if (productDOM.querySelector('.product__name').innerText === product.name) {
-        addToCartButtonDOM.innerText = 'In Cart';
-        const cartItemsDom = cartDom.querySelectorAll(".cart__item");
-        cartItemsDom.forEach(cartItemDom => {
-          if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
-
-            cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
-              cart.forEach(cartItem => {
-                if (cartItem.name === product.name) {
-                  // cartItem.quantity++;
-                  cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
-                  // ++ added to beginning otherwise the value displays first
-                }
-              });
-            });
-
-            // decreasing item quantity
-            cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
-              cart.forEach(cartItem => {
-                if (cartItem.name === product.name) {
-                  if (cartItem.quantity > 1) {
-                    // cartItem.quantity++;
-                    cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
-                    // ++ added to beginning otherwise the value displays first
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    // needs to be added whenever the state of the cart is changed
-                  } else {
-                    cartItemDom.remove();
-                    cart = cart.filter(cartItem => cartItem.name !== product.name);
-                    // removes item form the cart. Creates new array
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    // needs to be added whenever the state of the cart is changed
-                    addToCartButtonDOM.innerText = 'Add To Cart';
-                    // changes button back to add to cart
-                  }
-                }
-              });
-            });
-
-            // delete item from cart
-            cartItemDom.querySelector('[data-action="DELETE_ITEM"]').addEventListener('click', () => {
-              cart.forEach(cartItem => {
-                if (cartItem.name === product.name) {
-                  cartItemDom.remove();
-                  cart = cart.filter(cartItem => cartItem.name !== product.name);
-                  // removes item form the cart. Creates new array
-                  localStorage.setItem('cart', JSON.stringify(cart));
-                  // needs to be added whenever the state of the cart is changed
-                  addToCartButtonDOM.innerText = 'Add To Cart';
-                  // changes button back to add to cart
-                }
-              });
-            });
-
-          }
-        });
+        handleActionButtons(addToCartButtonDOM, product);
       }
     });
   });
 }
+
 // addToCartButtonsDOM.forEach(function (addToCartButtonDOM) {
 addToCartButtonsDOM.forEach(addToCartButtonDOM => {
   addToCartButtonDOM.addEventListener('click', () => {
@@ -100,76 +47,19 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     // if (isInCart === false) {
     if (!isInCart) {
       // only adds products that are not in the cart
-      insertItremToDOM(product)
+      insertItemToDOM(product)
 
       cart.push(product);
       // pushes products to cart array
       localStorage.setItem('cart', JSON.stringify(cart));
       // stores to local storage. Takes two arguments. cart = key to access the data, saves value JS object as a string -> JSON
       // can be seen in the console -> Application/Local storage
-      addToCartButtonDOM.innerText = 'In Cart';
-      // changes add to cart text to in cart
-      // console.log(cart);
-
-      // increasing item quantity
-      const cartItemsDom = cartDom.querySelectorAll(".cart__item");
-      cartItemsDom.forEach(cartItemDom => {
-        if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
-          cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
-            cart.forEach(cartItem => {
-              if (cartItem.name === product.name) {
-                // cartItem.quantity++;
-                cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
-                // ++ added to beginning otherwise the value displays first
-              }
-            });
-          });
-
-          // decreasing item quantity
-          cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
-            cart.forEach(cartItem => {
-              if (cartItem.name === product.name) {
-                if (cartItem.quantity > 1) {
-                  // cartItem.quantity++;
-                  cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
-                  // ++ added to beginning otherwise the value displays first
-                  localStorage.setItem('cart', JSON.stringify(cart));
-                  // needs to be added whenever the state of the cart is changed
-                } else {
-                  cartItemDom.remove();
-                  cart = cart.filter(cartItem => cartItem.name !== product.name);
-                  // removes item form the cart. Creates new array
-                  localStorage.setItem('cart', JSON.stringify(cart));
-                  // needs to be added whenever the state of the cart is changed
-                  addToCartButtonDOM.innerText = 'Add To Cart';
-                  // changes button back to add to cart
-                }
-              }
-            });
-          });
-
-          // delete item from cart
-          cartItemDom.querySelector('[data-action="DELETE_ITEM"]').addEventListener('click', () => {
-            cart.forEach(cartItem => {
-              if (cartItem.name === product.name) {
-                cartItemDom.remove();
-                cart = cart.filter(cartItem => cartItem.name !== product.name);
-                // removes item form the cart. Creates new array
-                localStorage.setItem('cart', JSON.stringify(cart));
-                // needs to be added whenever the state of the cart is changed
-                addToCartButtonDOM.innerText = 'Add To Cart';
-                // changes button back to add to cart
-              }
-            });
-          });
-
-        }
-      });
+      handleActionButtons(addToCartButtonDOM, product);
     }
   });
 });
 
-function insertItremToDOM(product) {
+function insertItemToDOM(product) {
   cartDom.insertAdjacentHTML('beforeend', `
     <div class="cart__item">
       <h3 class="cart__item__name">${product.name}</h3>
@@ -183,4 +73,66 @@ function insertItremToDOM(product) {
   // beforeend adds to the top of the cart
   // backticks create a template string
   // adds products to cart HTML
+}
+
+function handleActionButtons(addToCartButtonDOM, product) {
+  // need to pass in addToCartButtonDOM & product objects
+  addToCartButtonDOM.innerText = 'In Cart';
+  // changes add to cart text to in cart
+  // console.log(cart);
+
+  // increasing item quantity
+  const cartItemsDom = cartDom.querySelectorAll(".cart__item");
+  cartItemsDom.forEach(cartItemDom => {
+    if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
+      // increasing item quantity
+      cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
+        cart.forEach(cartItem => {
+          if (cartItem.name === product.name) {
+            // cartItem.quantity++;
+            cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
+            // ++ added to beginning otherwise the value displays first
+          }
+        });
+      });
+
+      // decreasing item quantity
+      cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
+        cart.forEach(cartItem => {
+          if (cartItem.name === product.name) {
+            if (cartItem.quantity > 1) {
+              // cartItem.quantity++;
+              cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
+              // ++ added to beginning otherwise the value displays first
+              localStorage.setItem('cart', JSON.stringify(cart));
+              // needs to be added whenever the state of the cart is changed
+            } else {
+              cartItemDom.remove();
+              cart = cart.filter(cartItem => cartItem.name !== product.name);
+              // removes item form the cart. Creates new array
+              localStorage.setItem('cart', JSON.stringify(cart));
+              // needs to be added whenever the state of the cart is changed
+              addToCartButtonDOM.innerText = 'Add To Cart';
+              // changes button back to add to cart
+            }
+          }
+        });
+      });
+
+      // delete item from cart
+      cartItemDom.querySelector('[data-action="DELETE_ITEM"]').addEventListener('click', () => {
+        cart.forEach(cartItem => {
+          if (cartItem.name === product.name) {
+            cartItemDom.remove();
+            cart = cart.filter(cartItem => cartItem.name !== product.name);
+            // removes item form the cart. Creates new array
+            localStorage.setItem('cart', JSON.stringify(cart));
+            // needs to be added whenever the state of the cart is changed
+            addToCartButtonDOM.innerText = 'Add To Cart';
+            // changes button back to add to cart
+          }
+        });
+      });
+    }
+  });
 }
