@@ -14,62 +14,38 @@ console.log(JSON.parse(localStorage.getItem('cart')));
 if (cart.length > 0) {
   cart.forEach(cartItem => {
     const product = cartItem;
-    cartDom.insertAdjacentHTML('beforeend', `
-      <div class="cart__item">
-        <h3 class="cart__item__name">${product.name}</h3>
-        <h3 class="cart__item__price">${product.price}</h3>
-        <button class="btn btn--primary bt--small" data-action="DECREASE_ITEM">&minus;</button>
-        <h3 class="cart__item__quantity">${product.quantity}</h3>
-        <button class="btn btn--primary bt--small" data-action="INCREASE_ITEM">&plus;</button>
-        <button class="btn btn--primary bt--small" data-action="DELETE_ITEM">&times;</button>
-        </div>
-      `);
+    insertItremToDOM(product)
+    // need to pass in product object
+    addToCartButtonsDOM.forEach(addToCartButtonDOM => {
+      const productDOM = addToCartButtonDOM.parentNode;
 
-      addToCartButtonsDOM.forEach(addToCartButtonDOM => {
-        const productDOM = addToCartButtonDOM.parentNode;
+      if (productDOM.querySelector('.product__name').innerText === product.name) {
+        addToCartButtonDOM.innerText = 'In Cart';
+        const cartItemsDom = cartDom.querySelectorAll(".cart__item");
+        cartItemsDom.forEach(cartItemDom => {
+          if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
 
-        if (productDOM.querySelector('.product__name').innerText === product.name) {
-          addToCartButtonDOM.innerText = 'In Cart';
-          const cartItemsDom = cartDom.querySelectorAll(".cart__item");
-          cartItemsDom.forEach(cartItemDom => {
-            if (cartItemDom.querySelector('.cart__item__name').innerText === product.name) {
-              cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
-                cart.forEach(cartItem => {
-                  if (cartItem.name === product.name) {
+            cartItemDom.querySelector('[data-action="INCREASE_ITEM"]').addEventListener('click', () => {
+              cart.forEach(cartItem => {
+                if (cartItem.name === product.name) {
+                  // cartItem.quantity++;
+                  cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
+                  // ++ added to beginning otherwise the value displays first
+                }
+              });
+            });
+
+            // decreasing item quantity
+            cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
+              cart.forEach(cartItem => {
+                if (cartItem.name === product.name) {
+                  if (cartItem.quantity > 1) {
                     // cartItem.quantity++;
-                    cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
+                    cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
                     // ++ added to beginning otherwise the value displays first
-                  }
-                });
-              });
-
-              // decreasing item quantity
-              cartItemDom.querySelector('[data-action="DECREASE_ITEM"]').addEventListener('click', () => {
-                cart.forEach(cartItem => {
-                  if (cartItem.name === product.name) {
-                    if (cartItem.quantity > 1) {
-                      // cartItem.quantity++;
-                      cartItemDom.querySelector('.cart__item__quantity').innerText = --cartItem.quantity;
-                      // ++ added to beginning otherwise the value displays first
-                      localStorage.setItem('cart', JSON.stringify(cart));
-                      // needs to be added whenever the state of the cart is changed
-                    } else {
-                      cartItemDom.remove();
-                      cart = cart.filter(cartItem => cartItem.name !== product.name);
-                      // removes item form the cart. Creates new array
-                      localStorage.setItem('cart', JSON.stringify(cart));
-                      // needs to be added whenever the state of the cart is changed
-                      addToCartButtonDOM.innerText = 'Add To Cart';
-                      // changes button back to add to cart
-                    }
-                  }
-                });
-              });
-
-              // delete item from cart
-              cartItemDom.querySelector('[data-action="DELETE_ITEM"]').addEventListener('click', () => {
-                cart.forEach(cartItem => {
-                  if (cartItem.name === product.name) {
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    // needs to be added whenever the state of the cart is changed
+                  } else {
                     cartItemDom.remove();
                     cart = cart.filter(cartItem => cartItem.name !== product.name);
                     // removes item form the cart. Creates new array
@@ -78,13 +54,29 @@ if (cart.length > 0) {
                     addToCartButtonDOM.innerText = 'Add To Cart';
                     // changes button back to add to cart
                   }
-                });
+                }
               });
+            });
 
-            }
-          });
-        }
-      });
+            // delete item from cart
+            cartItemDom.querySelector('[data-action="DELETE_ITEM"]').addEventListener('click', () => {
+              cart.forEach(cartItem => {
+                if (cartItem.name === product.name) {
+                  cartItemDom.remove();
+                  cart = cart.filter(cartItem => cartItem.name !== product.name);
+                  // removes item form the cart. Creates new array
+                  localStorage.setItem('cart', JSON.stringify(cart));
+                  // needs to be added whenever the state of the cart is changed
+                  addToCartButtonDOM.innerText = 'Add To Cart';
+                  // changes button back to add to cart
+                }
+              });
+            });
+
+          }
+        });
+      }
+    });
   });
 }
 // addToCartButtonsDOM.forEach(function (addToCartButtonDOM) {
@@ -108,19 +100,8 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     // if (isInCart === false) {
     if (!isInCart) {
       // only adds products that are not in the cart
-      cartDom.insertAdjacentHTML('beforeend', `
-        <div class="cart__item">
-          <h3 class="cart__item__name">${product.name}</h3>
-          <h3 class="cart__item__price">${product.price}</h3>
-          <button class="btn btn--primary bt--small" data-action="DECREASE_ITEM">&minus;</button>
-          <h3 class="cart__item__quantity">${product.quantity}</h3>
-          <button class="btn btn--primary bt--small" data-action="INCREASE_ITEM">&plus;</button>
-          <button class="btn btn--primary bt--small" data-action="DELETE_ITEM">&times;</button>
-          </div>
-        `);
-      // beforeend adds to the top of the cart
-      // backticks create a template string
-      // adds products to cart HTML
+      insertItremToDOM(product)
+
       cart.push(product);
       // pushes products to cart array
       localStorage.setItem('cart', JSON.stringify(cart));
@@ -187,3 +168,19 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
     }
   });
 });
+
+function insertItremToDOM(product) {
+  cartDom.insertAdjacentHTML('beforeend', `
+    <div class="cart__item">
+      <h3 class="cart__item__name">${product.name}</h3>
+      <h3 class="cart__item__price">${product.price}</h3>
+      <button class="btn btn--primary bt--small" data-action="DECREASE_ITEM">&minus;</button>
+      <h3 class="cart__item__quantity">${product.quantity}</h3>
+      <button class="btn btn--primary bt--small" data-action="INCREASE_ITEM">&plus;</button>
+      <button class="btn btn--primary bt--small" data-action="DELETE_ITEM">&times;</button>
+      </div>
+    `);
+  // beforeend adds to the top of the cart
+  // backticks create a template string
+  // adds products to cart HTML
+}
