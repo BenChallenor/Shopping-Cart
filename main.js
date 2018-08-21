@@ -71,6 +71,16 @@ function insertItemToDOM(product) {
   // beforeend adds to the top of the cart
   // backticks create a template string
   // adds products to cart HTML
+
+  if (document.querySelector('.cart-footer') === null) {
+    // only adds the clear & checkout buttons if there is no cart-footer
+    cartDom.insertAdjacentHTML('afterend', `
+    <div class="cart-footer">
+    <button class="btn btn--primary" data-action="CLEAR_CAT">Clear Cart</button>
+    <button class="btn btn--primary" data-action="CHECKOUT">Checkout</button>
+    </div>
+  `)
+  }
 }
 
 function handleActionButtons(addToCartButtonDOM, product) {
