@@ -72,15 +72,7 @@ function insertItemToDOM(product) {
   // backticks create a template string
   // adds products to cart HTML
 
-  if (document.querySelector('.cart-footer') === null) {
-    // only adds the clear & checkout buttons if there is no cart-footer
-    cartDom.insertAdjacentHTML('afterend', `
-    <div class="cart-footer">
-    <button class="btn btn--primary" data-action="CLEAR_CAT">Clear Cart</button>
-    <button class="btn btn--primary" data-action="CHECKOUT">Checkout</button>
-    </div>
-  `)
-  }
+  addCartFooter();
 }
 
 function handleActionButtons(addToCartButtonDOM, product) {
@@ -145,4 +137,40 @@ function removeItem(product, cartItemDom, addToCartButtonDOM) {
   // needs to be added whenever the state of the cart is changed
   addToCartButtonDOM.innerText = 'Add To Cart';
   // changes button back to add to cart
+  if (cart.length < 1) {
+    document.querySelector('.cart-footer').remove();
+    // when the cart is empty the checkout buttons are removed
+  }
+}
+
+function addCartFooter() {
+  if (document.querySelector('.cart-footer') === null) {
+    // only adds the clear & checkout buttons if there is no cart-footer
+    cartDom.insertAdjacentHTML('afterend', `
+  <div class="cart-footer">
+  <button class="btn btn--primary" data-action="CLEAR_CART">Clear Cart</button>
+  <button class="btn btn--primary" data-action="CHECKOUT">Checkout</button>
+  </div>
+  `)
+  document.querySelector('[data-action = "CLEAR_CART"]').addEventListener('click', () => clearCart());
+  document.querySelector('[data-action = "CHECKOUT"]').addEventListener('click', () => checkout());
+  }
+}
+
+function clearCart() {
+  cartDom.querySelectorAll('.cart__item').forEach(cartItemDom => {
+    cartItemDom.remove();
+  });
+  cart = [];
+  // emptys the cart array
+  localStorage.removeItem('cart');
+  // emptys items from local storage
+  document.querySelector('.cart-footer').remove();
+  addToCartButtonsDOM.forEach(addToCartButtonDOM => {
+    addToCartButtonDOM.innerText = 'Add To Cart';
+  });
+}
+
+function checkout() {
+
 }
