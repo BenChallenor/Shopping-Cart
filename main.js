@@ -185,5 +185,7 @@ function countCartTotal(){
   cart.forEach(cartItem => {
     cartTotal += (cartItem.quantity * cartItem.price);
   });
+  // document.querySelector('[data-action="CHECKOUT"]').innerText = 'Checkout $' + cartTotal;
+  document.querySelector('[data-action="CHECKOUT"]').innerText = `Checkout $${cartTotal}`;
   console.log(cartTotal);
 }
