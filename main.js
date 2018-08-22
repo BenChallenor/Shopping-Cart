@@ -14,6 +14,8 @@ if (cart.length > 0) {
   cart.forEach(cartItem => {
     const product = cartItem;
     insertItemToDOM(product)
+    countCartTotal()
+    // called when inserting to the DOM & when cart is saved to local storage
     addToCartButtonsDOM.forEach(addToCartButtonDOM => {
       const productDOM = addToCartButtonDOM.parentNode;
 
@@ -49,6 +51,7 @@ addToCartButtonsDOM.forEach(addToCartButtonDOM => {
       cart.push(product);
       // pushes products to cart array
       localStorage.setItem('cart', JSON.stringify(cart));
+      countCartTotal()
       // stores to local storage. Takes two arguments. cart = key to access the data, saves value JS object as a string -> JSON
       // can be seen in the console -> Application/Local storage
       handleActionButtons(addToCartButtonDOM, product);
@@ -107,6 +110,7 @@ function increaseItem(product, cartItemDom) {
       // cartItem.quantity++;
       cartItemDom.querySelector('.cart__item__quantity').innerText = ++cartItem.quantity;
       // ++ added to beginning otherwise the value displays first
+      countCartTotal()
     }
   });
 }
@@ -121,6 +125,7 @@ function decreaseItem(product, cartItemDom, addToCartButtonDOM) {
         // ++ added to beginning otherwise the value displays first
         localStorage.setItem('cart', JSON.stringify(cart));
         // needs to be added whenever the state of the cart is changed
+        countCartTotal()
       } else {
         removeItem(product, cartItemDom, addToCartButtonDOM);
       }
@@ -173,4 +178,12 @@ function clearCart() {
 
 function checkout() {
 
+}
+
+function countCartTotal(){
+  let cartTotal = 0;
+  cart.forEach(cartItem => {
+    cartTotal += (cartItem.quantity * cartItem.price);
+  });
+  console.log(cartTotal);
 }
