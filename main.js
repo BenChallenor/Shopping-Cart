@@ -192,9 +192,10 @@ function checkout() {
   });
 
   paypalFormHTML += `
-      <input type="submit" value="payPal"
       </form>
+      <div class="overlay"></div>
   `;
+  // overlay stops the user from adding to cart once submitted
   document.querySelector('body').insertAdjacentHTML('beforeend', paypalFormHTML);
   // injects HTML to before the end of the body
   document.getElementById('paypal-form').submit();
